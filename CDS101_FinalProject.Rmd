@@ -1,6 +1,8 @@
 ---
 title: "CDS-101 Checkpoint #2"
-author: "Eunho Cha, Daeun Choi, Songlee Jun, Hyun Woo Kang, Dawon Kyoung, Byungwook Oh, Duy Tran "
+author: 
+  - Eunho Cha, Daeun Choi, Songlee Jun, Hyun Woo Kang
+  - Dawon Kyoung, Byungwook Oh, Duy Tran
 date: "`r Sys.Date()`"
 documentclass: article
 geometry: margin=1in
