@@ -46,12 +46,14 @@ suppressPackageStartupMessages(library(broom))
 suppressPackageStartupMessages(library(dplyr))
 suppressPackageStartupMessages(library(modelr))
 suppressPackageStartupMessages(library(plotly))
+suppressPackageStartupMessages(library(readxl))
 # Load dataset
-Growth_Rate <- read_excel("Group_dataset.xlsx")
+Growth_Rate <- read_xlsx("Group_dataset.xlsx")
 ```
 
 ```{r}
 view(Growth_Rate)
+
 ```
 
 
