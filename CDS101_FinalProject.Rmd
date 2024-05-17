@@ -26,4 +26,34 @@ output:
     dev: svg
 ---
 
+```{r setup, include = FALSE}
+# DO NOT ALTER THIS CHUNK
+knitr::opts_chunk$set(
+  echo = TRUE,
+  eval = TRUE,
+  fig.width = 5,
+  fig.asp = 0.618,
+  out.width = "70%",
+  dpi = 120,
+  fig.align = "center",
+  cache = FALSE
+)
+is_pdf <- try (("pdf_document" %in% rmarkdown::all_output_formats(knitr::current_input())), silent=TRUE)
+is_pdf <- (is_pdf == TRUE)
+# Load required packages
+suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(broom))
+suppressPackageStartupMessages(library(dplyr))
+suppressPackageStartupMessages(library(modelr))
+suppressPackageStartupMessages(library(plotly))
+# Load dataset
+Growth_Rate <- read_excel("Group_dataset.xlsx")
+```
+
+```{r}
+view(Growth_Rate)
+```
+
+
+
 
