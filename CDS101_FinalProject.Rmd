@@ -47,15 +47,297 @@ suppressPackageStartupMessages(library(dplyr))
 suppressPackageStartupMessages(library(modelr))
 suppressPackageStartupMessages(library(plotly))
 suppressPackageStartupMessages(library(readxl))
+suppressPackageStartupMessages(library(infer))
 # Load dataset
-Growth_Rate <- read_xlsx("Group_dataset.xlsx")
+Group_dataset <- read_xlsx("Group_dataset.xlsx")
+
+```
+
+#GHG = Greenhouse Gases
+#FJO = Female Job Occupation
+
+```{r}
+colnames(Group_dataset)<- c("Year", "Birth_GR", "GHG_GR", "Inflation_GR", "FJO_GR")
+
+view(Group_dataset)
+```
+
+#Summarize
+```{r}
+summary(Group_dataset)
+```
+
+#Select
+```{r}
+Envo_ft <- Group_dataset %>%
+ select(Year, Birth_GR, GHG_GR)
 ```
 
 ```{r}
-view(Growth_Rate)
+Econ_ft <- Group_dataset %>%
+  select(Year, Birth_GR, Inflation_GR)
+```
 
+```{r}
+Soci_ft <- Group_dataset %>%
+   select(Year, Birth_GR, FJO_GR)
+```
+
+#Variation and Covariation - Envo_ft
+
+```{r}
+Envo_ft %>%
+ ggplot() +
+ geom_point(mapping = aes(y = GHG_GR, x = Year)) +
+  labs(title = "Scatterplot of Greenhouse Gas Emission Growth rate by Year",
+       x = "Year",
+       y = "Greenhouse gas emission")
+```
+
+```{r}
+Envo_ft %>%
+   ggplot()+
+   geom_point(mapping = aes(x  = GHG_GR, y = Birth_GR)) +
+   geom_smooth(mapping = aes(x  = GHG_GR, y  = Birth_GR), method="lm")+
+  labs(
+    title = "Scatterplot of Greenhouse gas emission vs Birth rate",
+      x = 'Greenhouse gas emission',
+    y = "Birth rate")
+```
+
+```{r}
+Group_dataset %>%
+  ggplot() +
+  geom_point(mapping = aes(x = GHG_GR, y = Inflation_GR))+
+  geom_smooth(mapping=aes(x = GHG_GR, y = Inflation_GR), method="lm")+
+  labs(
+    title = "Scatterplot of Greenhouse gas emission vs inflation rate",
+    x = "Greenhouse gas emission",
+    y = "Inflation rate") 
+```
+
+```{r}
+Group_dataset%>%
+  ggplot() +
+  geom_point(mapping = aes(y = GHG_GR, x = FJO_GR)) +
+geom_smooth(mapping=aes(y = GHG_GR, x = FJO_GR), method="lm")+
+  labs(
+    title = "Scatterplot of Greenhouse gas emission vs Female Job Occupation",
+    x = "Greenhouse gas emission",
+    y = "Female Job Occupation") 
+```
+#Variation and Covariation - Econ_ft
+
+```{r}
+ Econ_ft %>%
+  ggplot() +
+  geom_point(mapping = aes(y = Inflation_GR, x= Year))+ 
+  labs(title = "Relationship between Inflation rate and Birth rate", 
+       y = "Inflation Rate", 
+       x = "Year")
+```
+
+```{r}
+Econ_ft %>%
+  ggplot() +
+  geom_point(mapping=aes(x = Inflation_GR, y = Birth_GR))+
+  geom_smooth(mapping=aes(x = Inflation_GR, y = Birth_GR), method='lm')+
+  labs(
+    title= 'Scatterplot of Inflation rate vs Birth rate',
+    x= 'Inflation rate',
+    y= "Birth rate")
+```
+
+```{r}
+Group_dataset %>%
+   ggplot() +
+   geom_point(mapping= aes( x =Inflation_GR, y = GHG_GR))+
+   geom_smooth(mapping=aes(x = Inflation_GR, y = GHG_GR),
+method= 'lm')+
+   labs(
+     title= 'Scatterplot of inflation rate vs Greenhouse Gas Emission',
+     x= 'Inflation rate',
+     y= 'Greenhouse Gas Emission')
+```
+
+```{r}
+Group_dataset %>%
+   ggplot() +
+   geom_point(mapping = aes(x= Inflation_GR, y= FJO_GR))+
+   geom_smooth(mapping=aes(x= Inflation_GR, y= FJO_GR),
+method= 'lm')+
+   labs(
+     title= 'Scatterplot of inflation rate vs Female Job Occupation',
+     x= 'Inflation rate',
+     y= 'Female Job Occupation')
+```
+```{r}
+#Scatterplot  
+Soci_ft %>%
+  ggplot() +
+  geom_point(mapping = aes(y = FJO_GR, x = Year)) +
+  labs(title = "Relationship between Female Job Occupation and Birth Rate", y  = "Female Job Occupation", x = "Year")
+```
+
+```{r}
+# Scatterplot of Female Job Occupation vs Birth Rate
+Soci_ft %>%
+   ggplot() +
+   geom_point(mapping = aes(x= FJO_GR, y= Birth_GR))+
+   geom_smooth(mapping=aes(x = FJO_GR, y = Birth_GR), method="lm")+
+   labs(
+     title="Scatterplot of Female Job Occupation vs Birth Rate",
+     x= "Female Job Occupation",
+     y= "Birth Rate"
+   )
+```
+
+```{r}
+# Scatterplot of Female Job Occupation vs Greenhouse Gas Emission
+Group_dataset %>%
+   ggplot() +
+   geom_point(mapping= aes (x= FJO_GR, y= GHG_GR)) +
+   geom_smooth(mapping=aes (x= FJO_GR, y=GHG_GR), method="lm")+
+   labs(
+     title= "Scatterplot of Female Job Occupation vs Greenhouse Gas Emission",
+     x= "Female Job Occupation",
+     y= "Greenhouse Gas Emission"
+   )
+```
+
+```{r}
+
+# Scatterplot of Female Job Occupation vs Inflation Rate
+Group_dataset %>%
+   ggplot() +
+   geom_point(mapping= aes (x= FJO_GR, y=Inflation_GR)) +
+   geom_smooth(mapping=aes (x= FJO_GR, y=Inflation_GR), method="lm")+
+   labs(
+     title= "Scatterplot of Female Job Occupation vs Inflation Rate",
+     x= "Female Job Occupation",
+     y= "Inflation Rate"
+   )
+```   
+```{r}
+# Model
+Envo_ft_model <- lm(Birth_GR ~ GHG_GR, data = Envo_ft)
+```
+```{r}
+# Tidy model
+Envo_ft_model %>%
+  tidy()
+```
+
+```{r}
+# Null distribution
+Envo_null_distribution <- Envo_ft %>%
+  specify(Birth_GR ~ GHG_GR) %>%
+  hypothesize(null="independence") %>%
+  generate(reps=10000, type="permute") %>%
+  calculate(stat="slope")
+```
+
+```{r}
+# Observed stat
+Observed_stat <- Envo_ft %>%
+  specify(Birth_GR ~ GHG_GR) %>%
+  calculate(stat="slope")
+```
+
+```{r}
+# P-value
+p_value <- Envo_null_distribution %>%
+  get_p_value(obs_stat=Observed_stat, direction="both")
+```
+
+```{r}
+# P-value visualization
+Envo_null_distribution %>%
+  visualize() +
+  shade_p_value(obs_stat=Observed_stat, direction= "both") +
+  labs(title = "P-value Visualization")
+```
+```{r}
+# Model
+Econ_ft_model <- lm(Birth_GR ~ Inflation_GR, data=Econ_ft)
+```
+
+```{r}
+# Tidy model
+Econ_ft_model %>%
+  tidy()
+```
+
+```{r}
+# Null distribution
+Econ_null_distribution <- Econ_ft %>%
+  specify(Birth_GR ~ Inflation_GR) %>%
+  hypothesize(null="independence") %>%
+  generate(reps=10000, type="permute") %>%
+  calculate(stat="slope")
+```
+
+```{r}
+# Observed stat
+Observed_stat <- Econ_ft %>%
+  specify(Birth_GR ~ Inflation_GR) %>%
+  calculate(stat="slope")
+```
+
+```{r}
+# P-value
+p_value <- Econ_null_distribution %>%
+  get_p_value(obs_stat=Observed_stat, direction="both")
+```
+
+```{r}
+# P-value visualization
+Econ_null_distribution %>%
+  visualize() +
+  shade_p_value(obs_stat=Observed_stat, direction= "both") +
+  labs(title = "P-value Visualization")
 ```
 
 
 
+#Modeling & Hypothesis test - Soci
+```{r}
+# Model
+Soci_ft_model <- lm(Birth_GR ~ FJO_GR, data = Soci_ft)
+```
 
+```{r}
+# Tidy model
+Soci_ft_model %>%
+  tidy()
+```
+
+```{r}
+# Null distribution
+Soci_null_distribution <- Soci_ft %>%
+  specify(Birth_GR ~ FJO_GR) %>%
+  hypothesize(null="independence") %>%
+  generate(reps=10000, type="permute") %>%
+  calculate(stat="slope")
+```
+
+```{r}
+# Observed stat
+Observed_stat <- Soci_ft %>%
+  specify(Birth_GR ~ FJO_GR) %>%
+  calculate(stat="slope")
+```
+
+```{r}
+# P-value
+p_value <- Soci_null_distribution %>%
+  get_p_value(obs_stat=Observed_stat, direction="both")
+```
+
+```{r}
+# P-value visualization
+Soci_null_distribution %>%
+  visualize() +
+  shade_p_value(obs_stat=Observed_stat, direction="both") +
+  labs(title ="P-value visualization")
+```
