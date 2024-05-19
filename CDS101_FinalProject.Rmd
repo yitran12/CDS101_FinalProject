@@ -266,7 +266,7 @@ Observed_stat <- Envo_ft %>%
 
 ```{r}
 # P-value
-p_value <- Envo_null_distribution %>%
+Envo_null_distribution %>%
   get_p_value(obs_stat=Observed_stat, direction="both")
 ```
 
@@ -310,7 +310,7 @@ Observed_stat <- Econ_ft %>%
 
 ```{r}
 # P-value
-p_value <- Econ_null_distribution %>%
+Econ_null_distribution %>%
   get_p_value(obs_stat=Observed_stat, direction="both")
 ```
 
@@ -354,7 +354,7 @@ Observed_stat <- Soci_ft %>%
 
 ```{r}
 # P-value
-p_value <- Soci_null_distribution %>%
+Soci_null_distribution %>%
   get_p_value(obs_stat=Observed_stat, direction="both")
 ```
 
