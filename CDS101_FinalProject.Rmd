@@ -58,7 +58,7 @@ Group_dataset <- read_xlsx("Group_dataset.xlsx")
 #FJO = Female Job Occupation
 
 
-#Function Preparation(Hyunwoo Kang)
+# Function Preparation(Hyunwoo Kang)
 ```{r}
 colnames(Group_dataset)<- c("Year", "Birth_GR", "GHG_GR", "Inflation_GR", "FJO_GR")
 
@@ -66,13 +66,13 @@ view(Group_dataset)
 ```
 
 
-#Summarize
+# Summarize
 ```{r}
 summary(Group_dataset)
 ```
 
 
-#Select
+# Select
 ```{r}
 Envo_ft <- Group_dataset %>%
  select(Year, Birth_GR, GHG_GR)
@@ -89,13 +89,14 @@ Soci_ft <- Group_dataset %>%
 ```
 
 
-#Variation and Covariation - Envo_ft (Songlee Jun)
+# Variation and Covariation - Envo_ft (Songlee Jun)
 
 ```{r}
 Envo_ft %>%
  ggplot() +
  geom_point(mapping = aes(y = GHG_GR, x = Year)) +
-  labs(title = "Scatterplot of Greenhouse Gas Emission Growth rate by Year",
+  labs(title = "Scatterplot of Greenhouse Gas Emission Growth rate
+by Year",
        x = "Year",
        y = "Greenhouse gas emission")
 ```
@@ -117,7 +118,8 @@ Group_dataset %>%
   geom_point(mapping = aes(x = GHG_GR, y = Inflation_GR))+
   geom_smooth(mapping=aes(x = GHG_GR, y = Inflation_GR), method="lm")+
   labs(
-    title = "Scatterplot of Greenhouse Gas Emission vs Inflation Rate",
+    title = "Scatterplot of Greenhouse Gas Emission
+vs Inflation Rate",
     x = "Greenhouse gas emission",
     y = "Inflation rate") 
 ```
@@ -128,19 +130,20 @@ Group_dataset%>%
   geom_point(mapping = aes(x = GHG_GR, y = FJO_GR)) +
 geom_smooth(mapping=aes(x = GHG_GR, y = FJO_GR), method="lm")+
   labs(
-    title = "Scatterplot of Greenhouse Gas Emission vs Female Job Occupation",
+    title = "Scatterplot of Greenhouse Gas Emission vs Female
+Job Occupation",
     x = "Greenhouse gas emission",
     y = "Female Job Occupation") 
 ```
 
 
-#Variation and Covariation - Econ_ft (Dawon Kyoung)
+# Variation and Covariation - Econ_ft (Dawon Kyoung)
 
 ```{r}
  Econ_ft %>%
   ggplot() +
   geom_point(mapping = aes(y = Inflation_GR, x= Year))+ 
-  labs(title = "Scatterplot of Inflation rate by Year", 
+  labs(title = "Scatterplot of Inflation Growth rate by Year", 
        y = "Inflation Rate", 
        x = "Year")
 ```
@@ -163,7 +166,8 @@ Group_dataset %>%
    geom_smooth(mapping=aes(x = Inflation_GR, y = GHG_GR),
 method= 'lm')+
    labs(
-     title= 'Scatterplot of inflation rate vs Greenhouse Gas Emission',
+     title= 'Scatterplot of inflation rate vs Greenhouse Gas
+Emission',
      x= 'Inflation rate',
      y= 'Greenhouse Gas Emission')
 ```
@@ -175,19 +179,22 @@ Group_dataset %>%
    geom_smooth(mapping=aes(x= Inflation_GR, y= FJO_GR),
 method= 'lm')+
    labs(
-     title= 'Scatterplot of inflation rate vs Female Job Occupation',
+     title= 'Scatterplot of Inflation rate vs Female Job Occupation',
      x= 'Inflation rate',
      y= 'Female Job Occupation')
 ```
 
 
-#Variation and Covariation - Soci_ft (Eunho Cha)
+# Variation and Covariation - Soci_ft (Eunho Cha)
 
 ```{r}  
 Soci_ft %>%
   ggplot() +
   geom_point(mapping = aes(y = FJO_GR, x = Year)) +
-  labs(title = "Scatterplot of Female Job Occupation rate by Year", y  = "Female Job Occupation", x = "Year")
+  labs(title = "Scatterplot of Female Job Occupation Growth rate
+by Year",
+       y  = "Female Job Occupation",
+       x = "Year")
 ```
 
 ```{r}
@@ -208,7 +215,8 @@ Group_dataset %>%
    geom_point(mapping= aes (x= FJO_GR, y= GHG_GR)) +
    geom_smooth(mapping=aes (x= FJO_GR, y=GHG_GR), method="lm")+
    labs(
-     title= "Scatterplot of Female Job Occupation vs Greenhouse Gas Emission",
+     title= "Scatterplot of Female Job Occupation vs Greenhouse
+Gas Emission",
      x= "Female Job Occupation",
      y= "Greenhouse Gas Emission"
    )
@@ -227,7 +235,7 @@ Group_dataset %>%
 ```   
 
 
-#Modeling & Hyphothesis test- Envo_ft (Byungwook Oh)
+# Modeling & Hyphothesis test- Envo_ft (Byungwook Oh)
 
 ```{r}
 # Model
@@ -315,7 +323,7 @@ Econ_null_distribution %>%
 ```
 
 
-#Modeling & Hypothesis test - Soci_ft (Duy Tran)
+# Modeling & Hypothesis test - Soci_ft (Duy Tran)
 
 ```{r}
 # Model
