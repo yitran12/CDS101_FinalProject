@@ -192,7 +192,7 @@ Envo_null_distribution %>%
 Envo_null_distribution %>%
   visualize() +
   shade_p_value(obs_stat=Observed_stat, direction= "both") +
-  labs(title = "P-value Visualization")
+  labs(title = "P-value Visualization for Environmental Null Hypothesis")
 ```
 
 
@@ -286,7 +286,7 @@ Econ_null_distribution %>%
 Econ_null_distribution %>%
   visualize() +
   shade_p_value(obs_stat=Observed_stat, direction= "both") +
-  labs(title = "P-value Visualization")
+  labs(title = "P-value Visualization for Economical Null Hypothesis")
 ```
 
 
@@ -381,5 +381,5 @@ Soci_null_distribution %>%
 Soci_null_distribution %>%
   visualize() +
   shade_p_value(obs_stat=Observed_stat, direction="both") +
-  labs(title ="P-value visualization")
+  labs(title ="P-value visualization for Sociological Null Hypothesis")
 ```
