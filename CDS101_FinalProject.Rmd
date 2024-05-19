@@ -168,6 +168,18 @@ method= 'lm')+
      y= 'Greenhouse Gas Emission')
 ```
 
+```{r}
+Group_dataset %>%
+   ggplot() +
+   geom_point(mapping = aes(x= Inflation_GR, y= FJO_GR))+
+   geom_smooth(mapping=aes(x= Inflation_GR, y= FJO_GR),
+method= 'lm')+
+   labs(
+     title= 'Scatterplot of inflation rate vs Female Job Occupation',
+     x= 'Inflation rate',
+     y= 'Female Job Occupation')
+```
+
 
 #Variation and Covariation - Soci_ft (Eunho Cha)
 
