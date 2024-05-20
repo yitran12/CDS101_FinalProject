@@ -102,7 +102,7 @@ Soci_ft <- Group_dataset %>%
   geom_point(mapping = aes(y = Birth_per_1000, x= Year))+ 
   geom_smooth(mapping = aes(y = Birth_per_1000, x = Year), method = "lm") +
   labs(title = "Change on Birth rate", 
-       y = "Birth Rate", 
+       y = "Birth Rate (per 1000)", 
        x = "Year")
 ```
 
@@ -150,7 +150,7 @@ Envo_ft %>%
   labs(
     title = "Greenhouse gas emission vs Birth rate",
     x = 'Greenhouse gas emission',
-    y = "Birth rate")
+    y = "Birth rate (per 1000)")
 ```
 
 ```{r}
@@ -242,9 +242,42 @@ Envo_null_distribution %>%
   labs(title = "P-value Visualization")
 ```
 
-# Modeling & Hypothesis test - Envo_ft (Byungwook Oh)
+# Modeling & Hyphothesis test- Envo_ft with actual value (Byungwook Oh)
 
-add the code here
+```{r}
+# Model
+Envo_ft_model <- lm(Birth_per_1000 ~ GHG, data = Envo_ft)
+```
+
+```{r}
+# Null distribution
+Envo_null_distribution_rv <- Envo_ft %>%
+  specify(Birth_per_1000 ~ GHG) %>%
+  hypothesize(null="independence") %>%
+  generate(reps=10000, type="permute") %>%
+  calculate(stat="slope")
+```
+
+```{r}
+# Observed stat
+Observed_stat <- Envo_ft %>%
+  specify(Birth_per_1000 ~ GHG) %>%
+  calculate(stat="slope")
+```
+
+```{r}
+# P-value
+Envo_null_distribution_rv %>%
+  get_p_value(obs_stat=Observed_stat, direction="both")
+```
+```{r}
+# P-value visualization
+Envo_null_distribution_rv %>%
+  visualize() +
+  shade_p_value(obs_stat=Observed_stat, direction= "both") +
+  labs(title = "P-value Visualization")
+```
+
 
 # Variation and Covariation - Econ_ft (Dawon Kyoung)
 
@@ -252,7 +285,7 @@ add the code here
  Econ_ft %>%
   ggplot() +
   geom_point(mapping = aes(y = Inflation_YOY, x= Year))+ 
-  labs(title = "Change in Inflation rate Year-on-year", 
+  labs(title = "Change in Inflation rate year-on-year", 
        y = "Inflation Rate_YOY", 
        x = "Year")
 ```
@@ -282,11 +315,10 @@ Econ_ft %>%
 Econ_ft %>%
   ggplot() +
   geom_point(mapping=aes(x = INF_Rate, y = Birth_per_1000))+
-  geom_smooth(mapping=aes(x = INF_Rate, y = Birth_per_1000), method='lm')+
   labs(
     title= 'Inflation rate vs Birth rate',
     x= 'Inflation rate',
-    y= "Birth rate")
+    y= "Birth rate (per 1000)")
 ```
 
 
@@ -378,9 +410,43 @@ Econ_null_distribution %>%
   labs(title = "P-value Visualization")
 ```
 
-# Modeling & Hypothesis test - Econ_ft (Daeun Choi)
+# Modeling & Hypothesis test - Econ_ft with actual value (Daeun Choi)
 
-add the code here
+```{r}
+# Model
+Econ_ft_model <- lm(Birth_per_1000 ~ INF_Rate, data = Econ_ft)
+```
+
+```{r}
+# Null distribution
+Econ_null_distribution_rv <- Econ_ft %>%
+  specify(Birth_per_1000 ~ INF_Rate) %>%
+  hypothesize(null="independence") %>%
+  generate(reps=10000, type="permute") %>%
+  calculate(stat="slope")
+```
+
+```{r}
+# Observed stat
+Observed_stat <- Econ_ft %>%
+  specify(Birth_per_1000 ~ INF_Rate) %>%
+  calculate(stat="slope")
+```
+
+```{r}
+# P-value
+Econ_null_distribution_rv %>%
+  get_p_value(obs_stat=Observed_stat, direction="both")
+```
+
+```{r}
+# P-value visualization
+Econ_null_distribution_rv %>%
+  visualize() +
+  shade_p_value(obs_stat=Observed_stat, direction= "both") +
+  labs(title = "P-value Visualization")
+```
+
 
 # Variation and Covariation - Soci_ft (Eunho Cha)
 
@@ -411,7 +477,7 @@ Soci_ft %>%
    labs(
      title="Female Job Occupation_YOY vs Birth Rate_YOY",
      x= "Female Job Occupation_YOY",
-     y= "Birth Rate"
+     y= "Birth Rate_YOY"
    )
 ```
 
@@ -423,7 +489,7 @@ Soci_ft %>%
    labs(
      title="Female Job Occupation vs Birth Rate",
      x= "Female Job Occupation",
-     y= "Birth Rate"
+     y= "Birth Rate (per 1000)"
    )
 ```
 
@@ -456,7 +522,7 @@ Group_dataset %>%
 ```{r}
 Group_dataset %>%
    ggplot() +
-   geom_point(mapping= aes (x= FJO_YOY, y=Inflation_YOY))    
+   geom_point(mapping= aes (x= FJO_YOY, y=Inflation_YOY)) + 
    labs(
      title= "Female Job Occupation_YOY vs Inflation Rate_YOY",
      x= "Female Job Occupation_YOY",
@@ -476,7 +542,7 @@ Group_dataset %>%
    )
 ```
 
-# Modeling & Hypothesis test - Soci_ft (Year on Year) (Duy Tran)
+# Modeling & Hypothesis test - Soci_ft year on year (Duy Tran)
 
 ```{r}
 # Model
@@ -519,9 +585,42 @@ Soci_null_distribution %>%
   labs(title ="P-value visualization")
 ```
 
-# Modeling & Hypothesis test - Soci-ft
+# Modeling & Hyphothesis test- Soci_ft with actual value (Duy Tran)
 
-add the code here
+```{r}
+# Model
+Soci_ft_model <- lm(Birth_per_1000 ~ FJO, data = Soci_ft)
+```
+
+```{r}
+# Null distribution
+Soci_null_distribution_rv <- Soci_ft %>%
+  specify(Birth_per_1000 ~ FJO) %>%
+  hypothesize(null="independence") %>%
+  generate(reps=10000, type="permute") %>%
+  calculate(stat="slope")
+```
+
+```{r}
+# Observed stat
+Observed_stat <- Soci_ft %>%
+  specify(Birth_per_1000 ~ FJO) %>%
+  calculate(stat="slope")
+```
+
+```{r}
+# P-value
+Soci_null_distribution_rv %>%
+  get_p_value(obs_stat=Observed_stat, direction="both")
+```
+
+```{r}
+# P-value visualization
+Soci_null_distribution_rv %>%
+  visualize() +
+  shade_p_value(obs_stat=Observed_stat, direction= "both") +
+  labs(title = "P-value Visualization")
+```
 
 
 
