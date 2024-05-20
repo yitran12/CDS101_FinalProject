@@ -1,0 +1,527 @@
+---
+title: "CDS-101 Checkpoint #2"
+author: 
+  - Eunho Cha, Daeun Choi, Songlee Jun, Hyun Woo Kang
+  - Dawon Kyoung, Byungwook Oh, Duy Tran
+date: "`r Sys.Date()`"
+documentclass: article
+geometry: margin=1in
+fontsize: 11pt
+output:
+  pdf_document:
+    toc: false
+    df_print: kable
+    fig_caption: false
+    number_sections: false
+    dev: pdf
+    highlight: tango
+  html_document:
+    theme: default
+    self_contained: true
+    toc: false
+    df_print: kable
+    fig_caption: false
+    number_sections: false
+    smart: true
+    dev: svg
+---
+
+```{r setup, include = FALSE}
+# DO NOT ALTER THIS CHUNK
+knitr::opts_chunk$set(
+  echo = TRUE,
+  eval = TRUE,
+  fig.width = 5,
+  fig.asp = 0.618,
+  out.width = "70%",
+  dpi = 120,
+  fig.align = "center",
+  cache = FALSE
+)
+is_pdf <- try (("pdf_document" %in% rmarkdown::all_output_formats(knitr::current_input())), silent=TRUE)
+is_pdf <- (is_pdf == TRUE)
+# Load required packages
+suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(broom))
+suppressPackageStartupMessages(library(dplyr))
+suppressPackageStartupMessages(library(modelr))
+suppressPackageStartupMessages(library(plotly))
+suppressPackageStartupMessages(library(readxl))
+suppressPackageStartupMessages(library(infer))
+# Load dataset
+Group_dataset <- read_xlsx("Group_dataset.xlsx")
+
+```
+
+
+#GHG = Greenhouse Gases
+#FJO = Female Job Occupation
+#YOY = Year-on-Year
+
+
+# Organizing Dataset (Hyunwoo Kang)
+
+
+## Summarize
+```{r}
+summary(Group_dataset)
+```
+
+
+# Select
+```{r}
+Envo_ft <- Group_dataset %>%
+ select(Year, Birth_per_1000, Birth_YOY, GHG, GHG_YOY)
+```
+
+```{r}
+Econ_ft <- Group_dataset %>%
+  select(Year, Birth_per_1000, Birth_YOY, INF_Rate, Inflation_YOY)
+```
+
+```{r}
+Soci_ft <- Group_dataset %>%
+   select(Year, Birth_per_1000, Birth_YOY, FJO, FJO_YOY)
+```
+
+
+# Variation of Birth Rate change Year-on-Year (Hyunwoo Kang)
+
+```{r}
+ Group_dataset %>%
+  ggplot() +
+  geom_point(mapping = aes(y = Birth_YOY, x= Year))+ 
+  labs(title = "Change on Birth rate year-on-year", 
+       y = "Birth Rate_YOY", 
+       x = "Year")
+```
+
+```{r}
+ Group_dataset %>%
+  ggplot() +
+  geom_point(mapping = aes(y = Birth_per_1000, x= Year))+ 
+  geom_smooth(mapping = aes(y = Birth_per_1000, x = Year), method = "lm") +
+  labs(title = "Change on Birth rate", 
+       y = "Birth Rate", 
+       x = "Year")
+```
+
+
+
+
+# Variation and Covariation - Envo_ft (Songlee Jun)
+
+```{r}
+Envo_ft %>%
+ ggplot() +
+ geom_point(mapping = aes(x = Year, y = GHG_YOY)) +
+ geom_smooth(mapping = aes(x = Year, y = GHG_YOY), method = "lm") + 
+  labs(title = "Change in Greenhouse Gas Emission year on year",
+       x = "Year",
+       y = "Greenhouse gas emission_YOY")
+```
+
+```{r}
+Envo_ft %>%
+ ggplot() +
+ geom_point(mapping = aes(x = Year, y = GHG)) +
+ geom_smooth(mapping = aes(x = Year, y = GHG), method = "lm") + 
+  labs(title = "Change in Greenhouse Gas Emission",
+       x = "Year",
+       y = "Greenhouse gas emission")
+```
+
+
+```{r}
+Envo_ft %>%
+   ggplot()+
+   geom_point(mapping = aes(x  = GHG_YOY, y = Birth_YOY)) +
+  labs(
+    title = "Greenhouse gas emission_YOY vs Birth rate_YOY",
+    x = 'Greenhouse gas emission_YOY',
+    y = "Birth rate_YOY")
+```
+
+```{r}
+Envo_ft %>%
+   ggplot()+
+   geom_point(mapping = aes(x  = GHG, y = Birth_per_1000)) +
+   geom_smooth(mapping = aes(x  = GHG, y  = Birth_per_1000), method="lm")+
+  labs(
+    title = "Greenhouse gas emission vs Birth rate",
+    x = 'Greenhouse gas emission',
+    y = "Birth rate")
+```
+
+```{r}
+Group_dataset %>%
+  ggplot() +
+  geom_point(mapping = aes(x = GHG_YOY, y = Inflation_YOY))+
+  labs(
+    title = "Greenhouse Gas Emission_YOY vs Inflation Rate_YOY",
+    x = "Greenhouse gas emission_YOY",
+    y = "Inflation rate_YOY") 
+```
+
+```{r}
+Group_dataset %>%
+  ggplot() +
+  geom_point(mapping = aes(x = GHG, y = INF_Rate))+
+  geom_smooth(mapping = aes(x  = GHG, y  = INF_Rate), method="lm")+
+  labs(
+    title = "Greenhouse Gas Emission vs Inflation Rate",
+    x = "Greenhouse gas emission",
+    y = "Inflation rate") 
+```
+
+
+
+```{r}
+Group_dataset%>%
+  ggplot() +
+  geom_point(mapping = aes(x = GHG_YOY, y = FJO_YOY)) +
+  labs(
+    title = "Greenhouse Gas Emission_YOY vs Female Job
+Occupation_YOY",
+    x = "Greenhouse gas emission_YOY",
+    y = "Female Job Occupation_YOY") 
+```
+
+```{r}
+Group_dataset%>%
+  ggplot() +
+  geom_point(mapping = aes(x = GHG, y = FJO)) +
+geom_smooth(mapping=aes(x = GHG, y = FJO), method="lm")+
+  labs(
+    title = "Greenhouse Gas Emission vs Female Job
+Occupation",
+    x = "Greenhouse gas emission",
+    y = "Female Job Occupation") 
+```
+
+# Modeling & Hyphothesis test- Envo_ft year-on-year (Byungwook Oh)
+
+```{r}
+# Model
+Envo_ft_model <- lm(Birth_YOY ~ GHG_YOY, data = Envo_ft)
+```
+
+```{r}
+# Tidy model
+Envo_ft_model %>%
+  tidy()
+```
+
+```{r}
+# Null distribution
+Envo_null_distribution <- Envo_ft %>%
+  specify(Birth_YOY ~ GHG_YOY) %>%
+  hypothesize(null="independence") %>%
+  generate(reps=10000, type="permute") %>%
+  calculate(stat="slope")
+```
+
+```{r}
+# Observed stat
+Observed_stat <- Envo_ft %>%
+  specify(Birth_YOY ~ GHG_YOY) %>%
+  calculate(stat="slope")
+```
+
+```{r}
+# P-value
+Envo_null_distribution %>%
+  get_p_value(obs_stat=Observed_stat, direction="both")
+```
+
+```{r}
+# P-value visualization
+Envo_null_distribution %>%
+  visualize() +
+  shade_p_value(obs_stat=Observed_stat, direction= "both") +
+  labs(title = "P-value Visualization")
+```
+
+# Modeling & Hypothesis test - Envo_ft (Byungwook Oh)
+
+add the code here
+
+# Variation and Covariation - Econ_ft (Dawon Kyoung)
+
+```{r}
+ Econ_ft %>%
+  ggplot() +
+  geom_point(mapping = aes(y = Inflation_YOY, x= Year))+ 
+  labs(title = "Change in Inflation rate Year-on-year", 
+       y = "Inflation Rate_YOY", 
+       x = "Year")
+```
+
+```{r}
+ Econ_ft %>%
+  ggplot() +
+  geom_point(mapping = aes(y = INF_Rate, x= Year))+ 
+  geom_smooth(mapping = (aes(y = INF_Rate, x = Year)), method ='lm') +
+  labs(title = "Change in Inflation rate", 
+       y = "Inflation Rate", 
+       x = "Year")
+```
+
+
+```{r}
+Econ_ft %>%
+  ggplot() +
+  geom_point(mapping=aes(x = Inflation_YOY, y = Birth_YOY))+
+  labs(
+    title= 'Inflation rate_YOY vs Birth rate_YOY',
+    x= 'Inflation rate_YOY',
+    y= "Birth rate_YOY")
+```
+
+```{r}
+Econ_ft %>%
+  ggplot() +
+  geom_point(mapping=aes(x = INF_Rate, y = Birth_per_1000))+
+  geom_smooth(mapping=aes(x = INF_Rate, y = Birth_per_1000), method='lm')+
+  labs(
+    title= 'Inflation rate vs Birth rate',
+    x= 'Inflation rate',
+    y= "Birth rate")
+```
+
+
+```{r}
+Group_dataset %>%
+   ggplot() +
+   geom_point(mapping= aes( x =Inflation_YOY, y = GHG_YOY))+
+   labs(
+     title= 'Inflation rate_YOY vs Greenhouse Gas Emission_YOY',
+     x= 'Inflation rate_YOY',
+     y= 'Greenhouse Gas Emission_YOY')
+```
+
+```{r}
+Group_dataset %>%
+   ggplot() +
+   geom_point(mapping= aes( x = INF_Rate, y = GHG))+
+   geom_smooth(mapping=aes(x = INF_Rate, y = GHG),
+method= 'lm')+
+   labs(
+     title= 'Inflation rate vs Greenhouse Gas Emission',
+     x= 'Inflation rate',
+     y= 'Greenhouse Gas Emission')
+```
+
+
+```{r}
+Group_dataset %>%
+   ggplot() +
+   geom_point(mapping = aes(x= Inflation_YOY, y= FJO_YOY))+
+   labs(
+     title= 'Inflation rate_YOY vs Female Job Occupation_YOY',
+     x= 'Inflation rate_YOY',
+     y= 'Female Job Occupation_YOY')
+```
+
+```{r}
+Group_dataset %>%
+   ggplot() +
+   geom_point(mapping = aes(x= INF_Rate, y= FJO))+
+   geom_smooth(mapping=aes(x= INF_Rate, y= FJO),
+method= 'lm')+
+   labs(
+     title= 'Inflation rate vs Female Job Occupation',
+     x= 'Inflation rate',
+     y= 'Female Job Occupation')
+```
+
+# Modeling & Hyphothesis test- Econ_ft year on year (Daeun Choi)
+
+```{r}
+# Model
+Econ_ft_model <- lm(Birth_YOY ~ Inflation_YOY, data=Econ_ft)
+```
+
+```{r}
+# Tidy model
+Econ_ft_model %>%
+  tidy()
+```
+
+```{r}
+# Null distribution
+Econ_null_distribution <- Econ_ft %>%
+  specify(Birth_YOY ~ Inflation_YOY) %>%
+  hypothesize(null="independence") %>%
+  generate(reps=10000, type="permute") %>%
+  calculate(stat="slope")
+```
+
+```{r}
+# Observed stat
+Observed_stat <- Econ_ft %>%
+  specify(Birth_YOY ~ Inflation_YOY) %>%
+  calculate(stat="slope")
+```
+
+```{r}
+# P-value
+Econ_null_distribution %>%
+  get_p_value(obs_stat=Observed_stat, direction="both")
+```
+
+```{r}
+# P-value visualization
+Econ_null_distribution %>%
+  visualize() +
+  shade_p_value(obs_stat=Observed_stat, direction= "both") +
+  labs(title = "P-value Visualization")
+```
+
+# Modeling & Hypothesis test - Econ_ft (Daeun Choi)
+
+add the code here
+
+# Variation and Covariation - Soci_ft (Eunho Cha)
+
+```{r}  
+Soci_ft %>%
+  ggplot() +
+  geom_point(mapping = aes(y = FJO_YOY, x = Year)) +
+  labs(title = "Change in Female Job Occupation year on year",
+       y  = "Female Job Occupation_YOY",
+       x = "Year")
+```
+
+```{r}  
+Soci_ft %>%
+  ggplot() +
+  geom_point(mapping = aes(y = FJO, x = Year)) +
+  geom_smooth(mapping = aes(y = FJO, x = Year), method = 'lm') +
+  labs(title = "Change in Female Job Occupation",
+       y  = "Female Job Occupation",
+       x = "Year")
+```
+
+
+```{r}
+Soci_ft %>%
+   ggplot() +
+   geom_point(mapping = aes(x= FJO_YOY, y= Birth_YOY))+
+   labs(
+     title="Female Job Occupation_YOY vs Birth Rate_YOY",
+     x= "Female Job Occupation_YOY",
+     y= "Birth Rate"
+   )
+```
+
+```{r}
+Soci_ft %>%
+   ggplot() +
+   geom_point(mapping = aes(x= FJO, y= Birth_per_1000))+
+   geom_smooth(mapping=aes(x = FJO, y = Birth_per_1000), method="lm")+
+   labs(
+     title="Female Job Occupation vs Birth Rate",
+     x= "Female Job Occupation",
+     y= "Birth Rate"
+   )
+```
+
+
+```{r}
+Group_dataset %>%
+   ggplot() +
+   geom_point(mapping= aes (x= FJO_YOY, y= GHG_YOY)) +
+   labs(
+     title= "Female Job Occupation_YOY vs 
+     Greenhouse Gas Emission_YOY",
+     x= "Female Job Occupation_YOY",
+     y= "Greenhouse Gas Emission_YOY"
+   )
+```
+
+```{r}
+Group_dataset %>%
+   ggplot() +
+   geom_point(mapping= aes (x= FJO, y= GHG)) +
+   geom_smooth(mapping=aes (x= FJO, y=GHG), method="lm")+
+   labs(
+     title= "Female Job Occupation vs Greenhouse Gas Emission",
+     x= "Female Job Occupation",
+     y= "Greenhouse Gas Emission"
+   )
+```
+
+
+```{r}
+Group_dataset %>%
+   ggplot() +
+   geom_point(mapping= aes (x= FJO_YOY, y=Inflation_YOY))    
+   labs(
+     title= "Female Job Occupation_YOY vs Inflation Rate_YOY",
+     x= "Female Job Occupation_YOY",
+     y= "Inflation Rate_YOY"
+   )
+```   
+
+```{r}
+Group_dataset %>%
+   ggplot() +
+   geom_point(mapping= aes (x= FJO, y=INF_Rate)) +
+   geom_smooth(mapping=aes (x= FJO, y=INF_Rate), method="lm")+
+   labs(
+     title= "Female Job Occupation vs Inflation Rate",
+     x= "Female Job Occupation",
+     y= "Inflation Rate"
+   )
+```
+
+# Modeling & Hypothesis test - Soci_ft (Year on Year) (Duy Tran)
+
+```{r}
+# Model
+Soci_ft_model <- lm(Birth_YOY ~ FJO_YOY, data = Soci_ft)
+```
+
+```{r}
+# Tidy model
+Soci_ft_model %>%
+  tidy()
+```
+
+```{r}
+# Null distribution
+Soci_null_distribution <- Soci_ft %>%
+  specify(Birth_YOY ~ FJO_YOY) %>%
+  hypothesize(null="independence") %>%
+  generate(reps=10000, type="permute") %>%
+  calculate(stat="slope")
+```
+
+```{r}
+# Observed stat
+Observed_stat <- Soci_ft %>%
+  specify(Birth_YOY ~ FJO_YOY) %>%
+  calculate(stat="slope")
+```
+
+```{r}
+# P-value
+Soci_null_distribution %>%
+  get_p_value(obs_stat=Observed_stat, direction="both")
+```
+
+```{r}
+# P-value visualization
+Soci_null_distribution %>%
+  visualize() +
+  shade_p_value(obs_stat=Observed_stat, direction="both") +
+  labs(title ="P-value visualization")
+```
+
+# Modeling & Hypothesis test - Soci-ft
+
+add the code here
+
+
+
