@@ -48,6 +48,7 @@ suppressPackageStartupMessages(library(modelr))
 suppressPackageStartupMessages(library(plotly))
 suppressPackageStartupMessages(library(readxl))
 suppressPackageStartupMessages(library(infer))
+
 # Load dataset
 Group_dataset <- read_xlsx("Group_dataset.xlsx")
 
@@ -90,6 +91,7 @@ Soci_ft <- Group_dataset %>%
 ```{r}
  Group_dataset %>%
   ggplot() +
+  geom_line(mapping = aes(y = Birth_YOY, x= Year)) +
   geom_point(mapping = aes(y = Birth_YOY, x= Year))+ 
   labs(title = "Change on Birth rate year-on-year", 
        y = "Birth Rate_YOY", 
@@ -131,16 +133,30 @@ Envo_ft %>%
        y = "Greenhouse gas emission")
 ```
 
-
+```{r}
+Group_dataset%>%
+  pivot_longer(cols = c('Birth_YOY', 'GHG_YOY'),
+               names_to = 'Comb_YOY',
+               values_to = 'Val_YOY')%>%
+  
+ggplot(aes(y = Val_YOY, x = Year)) +
+  geom_line(aes(color = Comb_YOY))+
+  geom_point(aes(color = Comb_YOY)) +
+  labs(title = "Greenhouse Gas Emission_YOY vs Birth rate_YOY",
+    x = "Year",
+    y = "YOY Value")
+```
 ```{r}
 Envo_ft %>%
    ggplot()+
-   geom_point(mapping = aes(x  = GHG_YOY, y = Birth_YOY)) +
+   geom_boxplot(mapping = aes(x  = GHG, y = Birth_per_1000)) +
   labs(
-    title = "Greenhouse gas emission_YOY vs Birth rate_YOY",
-    x = 'Greenhouse gas emission_YOY',
-    y = "Birth rate_YOY")
+    title = "Greenhouse gas emission vs Birth rate",
+    x = 'Greenhouse gas emission',
+    y = "Birth rate (per 1000)")
 ```
+
+
 
 ```{r}
 Envo_ft %>%
@@ -154,13 +170,17 @@ Envo_ft %>%
 ```
 
 ```{r}
-Group_dataset %>%
-  ggplot() +
-  geom_point(mapping = aes(x = GHG_YOY, y = Inflation_YOY))+
-  labs(
-    title = "Greenhouse Gas Emission_YOY vs Inflation Rate_YOY",
-    x = "Greenhouse gas emission_YOY",
-    y = "Inflation rate_YOY") 
+Group_dataset%>%
+  pivot_longer(cols = c('Inflation_YOY', 'GHG_YOY'),
+               names_to = 'Comb_YOY',
+               values_to = 'Val_YOY')%>%
+  
+ggplot(aes(y = Val_YOY, x = Year)) +
+  geom_line(aes(color = Comb_YOY))+
+  geom_point(aes(color = Comb_YOY)) +
+  labs(title = "Greenhouse Gas Emission_YOY vs Inflation Rate_YOY",
+    x = "Year",
+    y = "YOY Value") 
 ```
 
 ```{r}
@@ -178,14 +198,31 @@ Group_dataset %>%
 
 ```{r}
 Group_dataset%>%
-  ggplot() +
-  geom_point(mapping = aes(x = GHG_YOY, y = FJO_YOY)) +
-  labs(
-    title = "Greenhouse Gas Emission_YOY vs Female Job
-Occupation_YOY",
-    x = "Greenhouse gas emission_YOY",
-    y = "Female Job Occupation_YOY") 
+  pivot_longer(cols = c('FJO_YOY', 'GHG_YOY'),
+               names_to = 'Comb_YOY',
+               values_to = 'Val_YOY')%>%
+  
+ggplot(aes(y = Val_YOY, x = Year)) +
+  geom_line(aes(color = Comb_YOY))+
+  geom_point(aes(color = Comb_YOY)) +
+  labs(title = "Greenhouse Gas Emission_YOY vs Female Job
+Occupation_YOY Line Graph",
+    x = "Year",
+    y = "YOY Values") 
 ```
+```{r}
+Group_dataset %>%
+  pivot_longer(cols = c('FJO_YOY', 'GHG_YOY'),
+               names_to = 'Comb_YOY',
+               values_to = 'Val_YOY') %>%
+  
+ggplot(aes(x = Val_YOY, fill = Comb_YOY)) +
+  geom_histogram(position = 'dodge', bins = 30) +
+  labs(title = "Distribution of Year-Over-Year Changes: Greenhouse Gas Emission vs Female Job Occupation",
+       x = "Year-Over-Year Change",
+       y = "Frequency")
+```
+
 
 ```{r}
 Group_dataset%>%
@@ -302,13 +339,18 @@ Envo_null_distribution_rv %>%
 
 
 ```{r}
-Econ_ft %>%
-  ggplot() +
-  geom_point(mapping=aes(x = Inflation_YOY, y = Birth_YOY))+
+Group_dataset%>%
+  pivot_longer(cols = c('Inflation_YOY', 'Birth_YOY'),
+               names_to = 'Comb_YOY',
+               values_to = 'Val_YOY')%>%
+  
+ggplot(aes(y = Val_YOY, x = Year)) +
+  geom_line(aes(color = Comb_YOY))+
+  geom_point(aes(color = Comb_YOY)) +
   labs(
     title= 'Inflation rate_YOY vs Birth rate_YOY',
-    x= 'Inflation rate_YOY',
-    y= "Birth rate_YOY")
+    x= 'Year',
+    y= "YOY Value")
 ```
 
 ```{r}
@@ -323,13 +365,18 @@ Econ_ft %>%
 
 
 ```{r}
-Group_dataset %>%
-   ggplot() +
-   geom_point(mapping= aes( x =Inflation_YOY, y = GHG_YOY))+
+Group_dataset%>%
+  pivot_longer(cols = c('Inflation_YOY', 'GHG_YOY'),
+               names_to = 'Comb_YOY',
+               values_to = 'Val_YOY')%>%
+  
+ggplot(aes(y = Val_YOY, x = Year)) +
+  geom_line(aes(color = Comb_YOY))+
+  geom_point(aes(color = Comb_YOY)) +
    labs(
      title= 'Inflation rate_YOY vs Greenhouse Gas Emission_YOY',
-     x= 'Inflation rate_YOY',
-     y= 'Greenhouse Gas Emission_YOY')
+     x= 'Year',
+     y= 'YOY values')
 ```
 
 ```{r}
@@ -347,12 +394,18 @@ method= 'lm')+
 
 ```{r}
 Group_dataset %>%
-   ggplot() +
-   geom_point(mapping = aes(x= Inflation_YOY, y= FJO_YOY))+
+  pivot_longer(cols = c('Inflation_YOY', 'FJO_YOY'),
+               names_to = 'Comb_YOY',
+               values_to = 'Val_YOY')%>%
+  
+ggplot(aes(x = Year, y = Val_YOY)) +
+   geom_line(aes(color = Comb_YOY))+
+   geom_point(aes(color = Comb_YOY)) +
    labs(
-     title= 'Inflation rate_YOY vs Female Job Occupation_YOY',
-     x= 'Inflation rate_YOY',
-     y= 'Female Job Occupation_YOY')
+     title = 'Inflation rate_YOY vs Female Job Occupation_YOY',
+     x = 'Year',
+     y = 'YOY Values')
+
 ```
 
 ```{r}
@@ -471,13 +524,18 @@ Soci_ft %>%
 
 
 ```{r}
-Soci_ft %>%
-   ggplot() +
-   geom_point(mapping = aes(x= FJO_YOY, y= Birth_YOY))+
+Group_dataset%>%
+  pivot_longer(cols = c('FJO_YOY', 'Birth_YOY'),
+               names_to = 'Comb_YOY',
+               values_to = 'Val_YOY')%>%
+  
+ggplot(aes(y = Val_YOY, x = Year)) +
+  geom_line(aes(color = Comb_YOY))+
+  geom_point(aes(color = Comb_YOY)) +
    labs(
      title="Female Job Occupation_YOY vs Birth Rate_YOY",
-     x= "Female Job Occupation_YOY",
-     y= "Birth Rate_YOY"
+     x= "Year",
+     y= "YOY Values"
    )
 ```
 
@@ -495,14 +553,19 @@ Soci_ft %>%
 
 
 ```{r}
-Group_dataset %>%
-   ggplot() +
-   geom_point(mapping= aes (x= FJO_YOY, y= GHG_YOY)) +
+Group_dataset%>%
+  pivot_longer(cols = c('FJO_YOY', 'GHG_YOY'),
+               names_to = 'Comb_YOY',
+               values_to = 'Val_YOY')%>%
+  
+ggplot(aes(y = Val_YOY, x = Year)) +
+  geom_line(aes(color = Comb_YOY))+
+  geom_point(aes(color = Comb_YOY)) +
    labs(
      title= "Female Job Occupation_YOY vs 
      Greenhouse Gas Emission_YOY",
-     x= "Female Job Occupation_YOY",
-     y= "Greenhouse Gas Emission_YOY"
+     x= "Year",
+     y= "YOY Values"
    )
 ```
 
@@ -520,13 +583,18 @@ Group_dataset %>%
 
 
 ```{r}
-Group_dataset %>%
-   ggplot() +
-   geom_point(mapping= aes (x= FJO_YOY, y=Inflation_YOY)) + 
+Group_dataset%>%
+  pivot_longer(cols = c('FJO_YOY', 'Inflation_YOY'),
+               names_to = 'Comb_YOY',
+               values_to = 'Val_YOY')%>%
+  
+ggplot(aes(y = Val_YOY, x = Year)) +
+  geom_line(aes(color = Comb_YOY))+
+  geom_point(aes(color = Comb_YOY)) +
    labs(
      title= "Female Job Occupation_YOY vs Inflation Rate_YOY",
-     x= "Female Job Occupation_YOY",
-     y= "Inflation Rate_YOY"
+     x= "Year",
+     y= "YOY Values"
    )
 ```   
 
