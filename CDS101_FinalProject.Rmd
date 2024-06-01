@@ -59,6 +59,13 @@ Group_dataset <- read_xlsx("Group_dataset.xlsx")
 #FJO = Female Job Occupation
 #YOY = Year-on-Year
 
+#Outlier function
+```{r}
+find_outlier <- function(x) {
+  return(x < quantile(x, .25) - 1.5*IQR(x) | x > quantile(x, .75) + 1.5*IQR(x))
+}
+```
+
 
 # Organizing Dataset (Hyunwoo Kang)
 
@@ -147,13 +154,38 @@ ggplot(aes(y = Val_YOY, x = Year)) +
     y = "YOY Value")
 ```
 ```{r}
+Group_dataset %>%
+  pivot_longer(cols = c('Birth_YOY', 'GHG_YOY'),
+               names_to = 'Comb_YOY',
+               values_to = 'Val_YOY') %>%
+  
+ggplot(aes(x = Val_YOY, fill = Comb_YOY)) +
+  geom_histogram(position = 'dodge', bins = 30) +
+  labs(title = "Distribution of Year-Over-Year Changes: 
+       Greenhouse Gas Emission vs Birth Rate",
+       x = "Year-Over-Year Change",
+       y = "Frequency")
+```
+
+```{r}
 Envo_ft %>%
-   ggplot()+
-   geom_boxplot(mapping = aes(x  = GHG, y = Birth_per_1000)) +
-  labs(
-    title = "Greenhouse gas emission vs Birth rate",
-    x = 'Greenhouse gas emission',
-    y = "Birth rate (per 1000)")
+   ggplot(mapping = aes(x = GHG, y = Birth_per_1000)) +
+   geom_boxplot(outlier.colour = "red", outlier.shape = 16) +
+   stat_summary(
+     aes(label = round(..y.., 1)),
+     geom = "text",
+     fun.data = function(y) {
+       out <- boxplot.stats(y)$out
+       if(length(out) == 0) return(NULL)
+       data.frame(y = out)
+     },
+     hjust = -0.5
+   ) +
+   labs(
+     title = "Greenhouse gas emission vs Birth rate",
+     x = 'Greenhouse gas emission',
+     y = "Birth rate (per 1000)"
+   )
 ```
 
 
@@ -181,6 +213,40 @@ ggplot(aes(y = Val_YOY, x = Year)) +
   labs(title = "Greenhouse Gas Emission_YOY vs Inflation Rate_YOY",
     x = "Year",
     y = "YOY Value") 
+```
+```{r}
+Group_dataset %>%
+  pivot_longer(cols = c('Inflation_YOY', 'GHG_YOY'),
+               names_to = 'Comb_YOY',
+               values_to = 'Val_YOY') %>%
+  
+ggplot(aes(x = Val_YOY, fill = Comb_YOY)) +
+  geom_histogram(position = 'dodge', bins = 30) +
+  labs(title = "Distribution of Year-Over-Year Changes:
+       Greenhouse Gas Emission vs Inflation rate",
+       x = "Year-Over-Year Change",
+       y = "Frequency")
+```
+
+```{r}
+Group_dataset %>%
+   ggplot(mapping = aes(x = GHG, y = INF_Rate)) +
+   geom_boxplot(outlier.colour = "red", outlier.shape = 16) +
+   stat_summary(
+     aes(label = round(..y.., 1)),
+     geom = "text",
+     fun.data = function(y) {
+       out <- boxplot.stats(y)$out
+       if (length(out) == 0) return(NULL)
+       data.frame(y = out)
+     },
+     hjust = -0.5
+   ) +
+   labs(
+     title = "Greenhouse gas emission vs Inflation rate",
+     x = 'Greenhouse gas emission',
+     y = "Inflation rate"
+   )
 ```
 
 ```{r}
@@ -218,7 +284,43 @@ Group_dataset %>%
   
 ggplot(aes(x = Val_YOY, fill = Comb_YOY)) +
   geom_histogram(position = 'dodge', bins = 30) +
-  labs(title = "Distribution of Year-Over-Year Changes: Greenhouse Gas Emission vs Female Job Occupation",
+  labs(title = "Distribution of Year-Over-Year Changes:
+       GHG Emission vs Female Job Occupancy",
+       x = "Year-Over-Year Change",
+       y = "Frequency")
+```
+
+```{r}
+Group_dataset %>%
+   ggplot(mapping = aes(x = GHG, y = FJO)) +
+   geom_boxplot(outlier.colour = "red", outlier.shape = 16) +
+   stat_summary(
+     aes(label = round(..y.., 1)),
+     geom = "text",
+     fun.data = function(y) {
+       out <- boxplot.stats(y)$out
+       if (length(out) == 0) return(NULL)
+       data.frame(y = out)
+     },
+     hjust = -0.5
+   ) +
+   labs(
+     title = "Greenhouse gas emission vs Female Job Occupancy ",
+     x = 'Greenhouse gas emission',
+     y = "Female Job Occupancy"
+   )
+```
+
+```{r}
+Group_dataset %>%
+  pivot_longer(cols = c('FJO_YOY', 'GHG_YOY'),
+               names_to = 'Comb_YOY',
+               values_to = 'Val_YOY') %>%
+  
+ggplot(aes(x = Val_YOY, fill = Comb_YOY)) +
+  geom_histogram(position = 'dodge', bins = 30) +
+  labs(title = "Distribution of Year-Over-Year Changes: 
+       Greenhouse Gas Emission vs Female Job Occupancy",
        x = "Year-Over-Year Change",
        y = "Frequency")
 ```
@@ -352,11 +454,45 @@ ggplot(aes(y = Val_YOY, x = Year)) +
     x= 'Year',
     y= "YOY Value")
 ```
+```{r}
+Group_dataset %>%
+  pivot_longer(cols = c('Inflation_YOY', 'Birth_YOY'),
+               names_to = 'Comb_YOY',
+               values_to = 'Val_YOY') %>%
+  
+ggplot(aes(x = Val_YOY, fill = Comb_YOY)) +
+  geom_histogram(position = 'dodge', bins = 30) +
+  labs(title = "Distribution of Year-Over-Year Changes:
+       Inflation Rate vs Birth Rate",
+       x = "Year-Over-Year Change",
+       y = "Frequency")
+```
+
+```{r}
+Econ_ft %>%
+   ggplot(mapping = aes( x = INF_Rate, y = Birth_per_1000)) +
+   geom_boxplot(outlier.colour = "red", outlier.shape = 16) +
+   stat_summary(
+     aes(label = round(..y.., 1)),
+     geom = "text",
+     fun.data = function(y) {
+       out <- boxplot.stats(y)$out
+       if (length(out) == 0) return(NULL)
+       data.frame(y = out)
+     },
+     hjust = -0.5
+   ) +
+  labs(
+    title = "Inflation rate vs Birth Rate",
+    x = 'Inflation rate',
+    y = "Birth Rate")
+```
 
 ```{r}
 Econ_ft %>%
   ggplot() +
-  geom_point(mapping=aes(x = INF_Rate, y = Birth_per_1000))+
+  geom_point(mapping=aes(x = INF_Rate, y = Birth_per_1000)) + 
+  geom_smooth(mapping = aes(x = INF_Rate, y = Birth_per_1000), method = 'lm') +
   labs(
     title= 'Inflation rate vs Birth rate',
     x= 'Inflation rate',
@@ -377,6 +513,39 @@ ggplot(aes(y = Val_YOY, x = Year)) +
      title= 'Inflation rate_YOY vs Greenhouse Gas Emission_YOY',
      x= 'Year',
      y= 'YOY values')
+```
+```{r}
+Group_dataset %>%
+  pivot_longer(cols = c('Inflation_YOY', 'GHG_YOY'),
+               names_to = 'Comb_YOY',
+               values_to = 'Val_YOY') %>%
+  
+ggplot(aes(x = Val_YOY, fill = Comb_YOY)) +
+  geom_histogram(position = 'dodge', bins = 30) +
+  labs(title = "Distribution of Year-Over-Year Changes:
+       Inflation Rate vs Greenhouse Gas Emission",
+       x = "Year-Over-Year Change",
+       y = "Frequency")
+```
+
+```{r}
+Group_dataset %>%
+   ggplot(mapping = aes(x = INF_Rate, y = GHG)) +
+   geom_boxplot(outlier.colour = "red", outlier.shape = 16) +
+   stat_summary(
+     aes(label = round(..y.., 1)),
+     geom = "text",
+     fun.data = function(y) {
+       out <- boxplot.stats(y)$out
+       if (length(out) == 0) return(NULL)
+       data.frame(y = out)
+     },
+     hjust = -0.5
+   ) +
+  labs(
+    title = "Inflation rate vs Greenhouse gas emission",
+    x = 'Inflation rate',
+    y = "Greenhouse gas emission")
 ```
 
 ```{r}
@@ -406,6 +575,39 @@ ggplot(aes(x = Year, y = Val_YOY)) +
      x = 'Year',
      y = 'YOY Values')
 
+```
+```{r}
+Group_dataset %>%
+  pivot_longer(cols = c('FJO_YOY', 'Inflation_YOY'),
+               names_to = 'Comb_YOY',
+               values_to = 'Val_YOY') %>%
+  
+ggplot(aes(x = Val_YOY, fill = Comb_YOY)) +
+  geom_histogram(position = 'dodge', bins = 30) +
+  labs(title = "Distribution of Year-Over-Year Changes:
+       Inflation Rate vs Female Job Occupancy",
+       x = "Year-Over-Year Change",
+       y = "Frequency")
+```
+
+```{r}
+Group_dataset %>%
+   ggplot(mapping = aes(x = INF_Rate, y = FJO)) +
+   geom_boxplot(outlier.colour = "red", outlier.shape = 16) +
+   stat_summary(
+     aes(label = round(..y.., 1)),
+     geom = "text",
+     fun.data = function(y) {
+       out <- boxplot.stats(y)$out
+       if (length(out) == 0) return(NULL)
+       data.frame(y = out)
+     },
+     hjust = -0.5
+   ) +
+  labs(
+    title = "Inflation rate vs Female Job Occupancy ",
+    x = 'Inflation rate',
+    y = "Female Job Occupancy")
 ```
 
 ```{r}
@@ -540,6 +742,39 @@ ggplot(aes(y = Val_YOY, x = Year)) +
 ```
 
 ```{r}
+Group_dataset %>%
+  pivot_longer(cols = c('FJO_YOY', 'Birth_YOY'),
+               names_to = 'Comb_YOY',
+               values_to = 'Val_YOY') %>%
+  
+ggplot(aes(x = Val_YOY, fill = Comb_YOY)) +
+  geom_histogram(position = 'dodge', bins = 30) +
+  labs(title = "Distribution of Year-Over-Year Changes:
+       Female Job Occupancy vs Birth rate",
+       x = "Year-Over-Year Change",
+       y = "Frequency")
+```
+```{r}
+Group_dataset %>%
+   ggplot(mapping = aes(x = FJO, y = Birth_per_1000)) +
+   geom_boxplot(outlier.colour = "red", outlier.shape = 16) +
+   stat_summary(
+     aes(label = round(..y.., 1)),
+     geom = "text",
+     fun.data = function(y) {
+       out <- boxplot.stats(y)$out
+       if (length(out) == 0) return(NULL)
+       data.frame(y = out)
+     },
+     hjust = -0.5
+   ) +
+  labs(
+    title = "Female job Occupancy vs Birth Rate",
+    x = 'Female Job Occupancy',
+    y = "Birth Rate")
+```
+
+```{r}
 Soci_ft %>%
    ggplot() +
    geom_point(mapping = aes(x= FJO, y= Birth_per_1000))+
@@ -571,6 +806,41 @@ ggplot(aes(y = Val_YOY, x = Year)) +
 
 ```{r}
 Group_dataset %>%
+  pivot_longer(cols = c('FJO_YOY', 'GHG_YOY'),
+               names_to = 'Comb_YOY',
+               values_to = 'Val_YOY') %>%
+  
+ggplot(aes(x = Val_YOY, fill = Comb_YOY)) +
+  geom_histogram(position = 'dodge', bins = 30) +
+  labs(title = "Distribution of Year-Over-Year Changes:
+       Female Job Occupancy vs Greenhouse Gas Emission",
+       x = "Year-Over-Year Change",
+       y = "Frequency")
+```
+```{r}
+Group_dataset %>%
+   ggplot(mapping = aes(x = FJO, y = GHG)) +
+   geom_boxplot(outlier.colour = "red", outlier.shape = 16) +
+   stat_summary(
+     aes(label = round(..y.., 1)),
+     geom = "text",
+     fun.data = function(y) {
+       out <- boxplot.stats(y)$out
+       if (length(out) == 0) return(NULL)
+       data.frame(y = out)
+     },
+     hjust = -0.5
+   ) +
+    labs(
+     title= "Female Job Occupation vs Greenhouse Gas Emission",
+     x= "Female Job Occupation",
+     y= "Greenhouse Gas Emission"
+    )
+```
+
+
+```{r}
+Group_dataset %>%
    ggplot() +
    geom_point(mapping= aes (x= FJO, y= GHG)) +
    geom_smooth(mapping=aes (x= FJO, y=GHG), method="lm")+
@@ -596,7 +866,42 @@ ggplot(aes(y = Val_YOY, x = Year)) +
      x= "Year",
      y= "YOY Values"
    )
-```   
+``` 
+```{r}
+Group_dataset %>%
+  pivot_longer(cols = c('FJO_YOY', 'Inflation_YOY'),
+               names_to = 'Comb_YOY',
+               values_to = 'Val_YOY') %>%
+  
+ggplot(aes(x = Val_YOY, fill = Comb_YOY)) +
+  geom_histogram(position = 'dodge', bins = 30) +
+  labs(title = "Distribution of Year-Over-Year Changes:
+       Female Job Occupancy vs Inflation Rate",
+       x = "Year-Over-Year Change",
+       y = "Frequency")
+```
+
+```{r}
+Group_dataset %>%
+   ggplot(mapping = aes(x = FJO, y = INF_Rate)) +
+   geom_boxplot(outlier.colour = "red", outlier.shape = 16) +
+   stat_summary(
+     aes(label = round(..y.., 1)),
+     geom = "text",
+     fun.data = function(y) {
+       out <- boxplot.stats(y)$out
+       if (length(out) == 0) return(NULL)
+       data.frame(y = out)
+     },
+     hjust = -0.5
+   ) +
+    labs(
+     title= "Female Job Occupation vs Inflation Rate",
+     x= "Female Job Occupation",
+     y= "Inflation Rate"
+    )
+```
+
 
 ```{r}
 Group_dataset %>%
