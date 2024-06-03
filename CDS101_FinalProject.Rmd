@@ -105,6 +105,7 @@ Soci_ft <- Group_dataset %>%
        x = "Year")
 ```
 
+
 ```{r}
  Group_dataset %>%
   ggplot() +
@@ -121,14 +122,15 @@ Soci_ft <- Group_dataset %>%
 # Variation and Covariation - Envo_ft (Songlee Jun)
 
 ```{r}
-Envo_ft %>%
- ggplot() +
- geom_point(mapping = aes(x = Year, y = GHG_YOY)) +
- geom_smooth(mapping = aes(x = Year, y = GHG_YOY), method = "lm") + 
-  labs(title = "Change in Greenhouse Gas Emission year on year",
-       x = "Year",
-       y = "Greenhouse gas emission_YOY")
+ Group_dataset %>%
+  ggplot() +
+  geom_line(mapping = aes(y = GHG_YOY, x= Year)) +
+  geom_point(mapping = aes(y = GHG_YOY, x= Year))+ 
+  labs(title = "Change on Greenhouse Gas emission year-on-year", 
+       y = "GHG_YOY", 
+       x = "Year")
 ```
+
 
 ```{r}
 Envo_ft %>%
@@ -309,20 +311,6 @@ Group_dataset %>%
      x = 'Greenhouse gas emission',
      y = "Female Job Occupancy"
    )
-```
-
-```{r}
-Group_dataset %>%
-  pivot_longer(cols = c('FJO_YOY', 'GHG_YOY'),
-               names_to = 'Comb_YOY',
-               values_to = 'Val_YOY') %>%
-  
-ggplot(aes(x = Val_YOY, fill = Comb_YOY)) +
-  geom_histogram(position = 'dodge', bins = 30) +
-  labs(title = "Distribution of Year-Over-Year Changes: 
-Greenhouse Gas Emission vs Female Job Occupancy",
-       x = "Year-Over-Year Change",
-       y = "Frequency")
 ```
 
 
@@ -578,6 +566,7 @@ ggplot(aes(x = Year, y = Val_YOY)) +
      y = 'YOY Values')
 
 ```
+
 ```{r}
 Group_dataset %>%
   pivot_longer(cols = c('FJO_YOY', 'Inflation_YOY'),
@@ -611,6 +600,7 @@ Group_dataset %>%
     x = 'Inflation rate',
     y = "Female Job Occupancy")
 ```
+
 
 ```{r}
 Group_dataset %>%
@@ -707,14 +697,16 @@ Econ_null_distribution_rv %>%
 
 # Variation and Covariation - Soci_ft (Eunho Cha)
 
-```{r}  
-Soci_ft %>%
+```{r}
+ Group_dataset %>%
   ggplot() +
-  geom_point(mapping = aes(y = FJO_YOY, x = Year)) +
-  labs(title = "Change in Female Job Occupation year on year",
-       y  = "Female Job Occupation_YOY",
+  geom_line(mapping = aes(y = FJO_YOY, x= Year)) +
+  geom_point(mapping = aes(y = FJO_YOY, x= Year))+ 
+  labs(title = "Change on Female Job Occupation year-on-year", 
+       y = "FJO_YOY", 
        x = "Year")
 ```
+
 
 ```{r}  
 Soci_ft %>%
@@ -743,6 +735,7 @@ ggplot(aes(y = Val_YOY, x = Year)) +
    )
 ```
 
+
 ```{r}
 Group_dataset %>%
   pivot_longer(cols = c('FJO_YOY', 'Birth_YOY'),
@@ -756,6 +749,8 @@ ggplot(aes(x = Val_YOY, fill = Comb_YOY)) +
        x = "Year-Over-Year Change",
        y = "Frequency")
 ```
+
+
 ```{r}
 Group_dataset %>%
    ggplot(mapping = aes(x = FJO, y = Birth_per_1000)) +
@@ -775,6 +770,7 @@ Group_dataset %>%
     x = 'Female Job Occupancy',
     y = "Birth Rate")
 ```
+
 
 ```{r}
 Soci_ft %>%
@@ -869,6 +865,8 @@ ggplot(aes(y = Val_YOY, x = Year)) +
      y= "YOY Values"
    )
 ``` 
+
+
 ```{r}
 Group_dataset %>%
   pivot_longer(cols = c('FJO_YOY', 'Inflation_YOY'),
@@ -882,6 +880,7 @@ ggplot(aes(x = Val_YOY, fill = Comb_YOY)) +
        x = "Year-Over-Year Change",
        y = "Frequency")
 ```
+
 
 ```{r}
 Group_dataset %>%
@@ -916,6 +915,7 @@ Group_dataset %>%
      y= "Inflation Rate"
    )
 ```
+
 
 # Modeling & Hypothesis test - Soci_ft year on year (Duy Tran)
 
