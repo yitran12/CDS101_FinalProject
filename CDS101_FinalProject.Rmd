@@ -130,7 +130,26 @@ Soci_ft <- Group_dataset %>%
        y = "GHG_YOY", 
        x = "Year")
 ```
+```{r}
+Group_dataset %>%
+  ggplot(mapping = aes(x = '', y = GHG_YOY)) +
+  geom_boxplot(outlier.colour = "red", outlier.shape = 16) +
+  stat_summary(
+    aes(label = round(..y.., 1)),
+    geom = "text",
+    fun.data = function(y) {
+      out <- boxplot.stats(y)$out
+      if (length(out) == 0) return(NULL)
+      data.frame(y = out)
+    },
+    hjust = -0.5
+  ) +
+  labs(
+    title = "Greenhouse gas YOY Boxplot",
+    y = "Greenhouse Gas Emission YOY"
+  )
 
+```
 
 ```{r}
 Envo_ft %>%
@@ -417,7 +436,26 @@ Envo_null_distribution_rv %>%
   labs(title = "Change on Inflation rate year-on-year",
        y = "Inflation rate_YOY", x = "Year")
 ```
+```{r}
+Group_dataset %>%
+  ggplot(mapping = aes(x = '', y = Inflation_YOY)) +
+  geom_boxplot(outlier.colour = "red", outlier.shape = 16) +
+  stat_summary(
+    aes(label = round(..y.., 1)),
+    geom = "text",
+    fun.data = function(y) {
+      out <- boxplot.stats(y)$out
+      if (length(out) == 0) return(NULL)
+      data.frame(y = out)
+    },
+    hjust = -0.5
+  ) +
+  labs(
+    title = "Inflation rate YOY Boxplot",
+    y = "Inflation YOY"
+  )
 
+```
 
 ```{r}
  Econ_ft %>%
@@ -706,7 +744,24 @@ Econ_null_distribution_rv %>%
        y = "FJO_YOY", 
        x = "Year")
 ```
-
+```{r}
+Group_dataset %>%
+   ggplot(mapping = aes(x = '', y = FJO_YOY)) +
+   geom_boxplot(outlier.colour = "red", outlier.shape = 16) +
+   stat_summary(
+     aes(label = round(..y.., 1)),
+     geom = "text",
+     fun.data = function(y) {
+       out <- boxplot.stats(y)$out
+       if (length(out) == 0) return(NULL)
+       data.frame(y = out)
+     },
+     hjust = -0.5
+   ) +
+  labs(
+    title = "Female job Occupancy YOY Boxplot",
+    y = "Female Job Occupancy YOY")
+```
 
 ```{r}  
 Soci_ft %>%
