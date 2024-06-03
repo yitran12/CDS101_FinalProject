@@ -1,5 +1,5 @@
 ---
-title: "CDS-101 Checkpoint #2"
+title: "CDS-101 Final Project"
 author: 
   - Eunho Cha, Daeun Choi, Songlee Jun, Hyun Woo Kang
   - Dawon Kyoung, Byungwook Oh, Duy Tran
