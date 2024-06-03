@@ -320,7 +320,7 @@ Group_dataset %>%
 ggplot(aes(x = Val_YOY, fill = Comb_YOY)) +
   geom_histogram(position = 'dodge', bins = 30) +
   labs(title = "Distribution of Year-Over-Year Changes: 
-       Greenhouse Gas Emission vs Female Job Occupancy",
+Greenhouse Gas Emission vs Female Job Occupancy",
        x = "Year-Over-Year Change",
        y = "Frequency")
 ```
@@ -420,14 +420,16 @@ Envo_null_distribution_rv %>%
 
 # Variation and Covariation - Econ_ft (Dawon Kyoung)
 
+
 ```{r}
- Econ_ft %>%
+ Group_dataset %>%
   ggplot() +
+  geom_line(mapping = aes(y = Inflation_YOY, x= Year)) +
   geom_point(mapping = aes(y = Inflation_YOY, x= Year))+ 
-  labs(title = "Change in Inflation rate year-on-year", 
-       y = "Inflation Rate_YOY", 
-       x = "Year")
+  labs(title = "Change on Inflation rate year-on-year",
+       y = "Inflation rate_YOY", x = "Year")
 ```
+
 
 ```{r}
  Econ_ft %>%
